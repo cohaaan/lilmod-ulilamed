@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/lilmod-ulilamed/static/css/main.7c25c96f.css",
+    "main.js": "/lilmod-ulilamed/static/js/main.0c8d3602.js",
+    "static/js/453.ea280c70.chunk.js": "/lilmod-ulilamed/static/js/453.ea280c70.chunk.js",
+    "index.html": "/lilmod-ulilamed/index.html",
+    "main.7c25c96f.css.map": "/lilmod-ulilamed/static/css/main.7c25c96f.css.map",
+    "main.0c8d3602.js.map": "/lilmod-ulilamed/static/js/main.0c8d3602.js.map",
+    "453.ea280c70.chunk.js.map": "/lilmod-ulilamed/static/js/453.ea280c70.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.7c25c96f.css",
+    "static/js/main.0c8d3602.js"
+  ]
+}
