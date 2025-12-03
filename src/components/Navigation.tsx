@@ -23,15 +23,16 @@ const Navigation: React.FC<NavigationProps> = ({
       if (!currentRef) return;
 
       setIsLoading(true);
-      
+
       try {
         // Load text to get next/prev references
         const textData = await getText(currentRef);
         setNextRef(textData.next || null);
         setPrevRef(textData.prev || null);
 
-        // Extract book title from reference (e.g., "Genesis 1:1" -> "Genesis")
-        const bookTitle = currentRef.split(' ')[0];
+        // Extract book title from reference using indexTitle from the response
+        // This is more reliable than parsing the reference string
+        const bookTitle = textData.indexTitle || extractBookTitle(currentRef);
         if (bookTitle) {
           try {
             const index = await getIndex(bookTitle);
@@ -50,6 +51,15 @@ const Navigation: React.FC<NavigationProps> = ({
     loadNavigation();
   }, [currentRef]);
 
+  // Helper function to extract book title from reference
+  // Handles multi-word book titles like "Song of Songs 1:1"
+  const extractBookTitle = (ref: string): string => {
+    // Remove verse numbers and chapter numbers to get the book title
+    // Pattern: Book Title Chapter:Verse or Book Title Chapter
+    const match = ref.match(/^(.+?)\s+\d+/);
+    return match ? match[1].trim() : ref.split(' ')[0];
+  };
+
   const handleNavigate = (ref: string) => {
     if (ref && ref !== currentRef) {
       onNavigate(ref);
@@ -66,16 +76,28 @@ const Navigation: React.FC<NavigationProps> = ({
   const renderChapterNavigation = () => {
     if (!currentIndexData) return null;
 
-    // Extract current chapter from reference
-    const refParts = currentRef.match(/([^:]+):?(\d+)?/);
-    if (!refParts) return null;
+    // Use indexTitle from the loaded data for reliability
+    const bookTitle = currentIndexData.title || extractBookTitle(currentRef);
 
-    const bookTitle = refParts[1];
-    const currentChapter = parseInt(refParts[2]) || 1;
+    // Extract current chapter from reference
+    // Handle both "Book Chapter:Verse" and "Book Chapter" formats
+    const chapterMatch = currentRef.match(/\s(\d+)(?::|$)/);
+    const currentChapter = chapterMatch ? parseInt(chapterMatch[1]) : 1;
+
+    // Use the index data to get actual chapter count if available
+    let maxChapters = 50; // Default fallback
+    if (currentIndexData.lengths && Array.isArray(currentIndexData.lengths) && currentIndexData.lengths.length > 0) {
+      maxChapters = currentIndexData.lengths[0] || 50;
+    } else if (typeof currentIndexData.order === 'number') {
+      maxChapters = currentIndexData.order;
+    } else if (Array.isArray(currentIndexData.order) && currentIndexData.order.length > 0) {
+      maxChapters = currentIndexData.order[0] || 50;
+    }
+
+    // Limit to reasonable maximum
+    maxChapters = Math.min(maxChapters, 150);
 
     const chapters = [];
-    const maxChapters = 50; // Reasonable limit for most books
-
     for (let i = 1; i <= maxChapters; i++) {
       chapters.push(
         <button

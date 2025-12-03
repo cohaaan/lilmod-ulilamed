@@ -86,9 +86,9 @@ const TextDisplay: React.FC<TextDisplayProps> = ({
 
   const renderInterleavedVerses = () => {
     if (!text) return null;
-    
-    const hebrewVerses = Array.isArray(text.he) ? text.he : [text.he];
-    const englishVerses = Array.isArray(text.text) ? text.text : [text.text];
+
+    const hebrewVerses = Array.isArray(text.he) ? text.he : [text.he || ''];
+    const englishVerses = Array.isArray(text.text) ? text.text : [text.text || ''];
     const maxLength = Math.max(hebrewVerses.length, englishVerses.length);
 
     return (
@@ -131,10 +131,9 @@ const TextDisplay: React.FC<TextDisplayProps> = ({
 
   const renderSideBySide = () => {
     if (!text) return null;
-    
-    const hebrewVerses = Array.isArray(text.he) ? text.he : [text.he];
-    const englishVerses = Array.isArray(text.text) ? text.text : [text.text];
-    const maxLength = Math.max(hebrewVerses.length, englishVerses.length);
+
+    const hebrewVerses = Array.isArray(text.he) ? text.he : [text.he || ''];
+    const englishVerses = Array.isArray(text.text) ? text.text : [text.text || ''];
 
     return (
       <div className="side-by-side-text">
@@ -277,16 +276,18 @@ const TextDisplay: React.FC<TextDisplayProps> = ({
         {layoutMode === 'sideBySide' ? renderSideBySide() : renderInterleavedVerses()}
       </div>
 
-      {selectedVerse !== null && layoutMode === 'hebrewOnly' && (
+      {selectedVerse !== null && layoutMode === 'hebrewOnly' && text && (
         <div className="translation-popup">
           <div className="popup-header">
             <span>Verse {selectedVerse + 1} Translation</span>
             <button onClick={() => setSelectedVerse(null)}>×</button>
           </div>
-          <div 
+          <div
             className="popup-content"
-            dangerouslySetInnerHTML={{ 
-              __html: Array.isArray(text.text) ? text.text[selectedVerse] : text.text 
+            dangerouslySetInnerHTML={{
+              __html: Array.isArray(text.text)
+                ? (text.text[selectedVerse] || '')
+                : (text.text || '')
             }}
           />
         </div>

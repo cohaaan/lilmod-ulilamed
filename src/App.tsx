@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import TextDisplay from './components/TextDisplay';
-import { getLibrary, LibraryCategory } from './services/sefariaApi';
+import { getLibrary, getIndex, LibraryCategory } from './services/sefariaApi';
 
 // Category colors
 const categoryColors: { [key: string]: string } = {
@@ -72,34 +72,43 @@ const App: React.FC = () => {
       setCurrentItems(item.contents);
       setChapters([]);
       setSelectedBook(null);
-    } 
+    }
     // If it's a book (has title), load chapters
     else if (item.title) {
       const bookTitle = item.title;
       setSelectedBook(bookTitle);
       setLoading(true);
-      
+
       try {
-        // Use the index API to get chapter count - it returns lengths array
-        const response = await fetch(`https://www.sefaria.org/api/index/${encodeURIComponent(bookTitle)}`);
-        const indexData = await response.json();
-        
-        // lengths is an array where first element is chapter/section count
-        const lengths = indexData.schema?.lengths || indexData.lengths;
+        // Use the getIndex API function with proper error handling
+        const indexData = await getIndex(bookTitle);
+
+        // Extract chapter count from index data
         let chapterCount = 1;
-        
-        if (lengths && Array.isArray(lengths) && lengths.length > 0) {
-          chapterCount = parseInt(lengths[0]) || 50;
-        } else if (indexData.schema?.nodes) {
+
+        // Try different sources for chapter count
+        if (indexData.lengths && Array.isArray(indexData.lengths) && indexData.lengths.length > 0) {
+          chapterCount = indexData.lengths[0] || 1;
+        } else if (indexData.schema?.lengths && Array.isArray(indexData.schema.lengths) && indexData.schema.lengths.length > 0) {
+          chapterCount = indexData.schema.lengths[0] || 1;
+        } else if (indexData.schema?.nodes && Array.isArray(indexData.schema.nodes)) {
           // Complex book with multiple sections
           chapterCount = indexData.schema.nodes.length;
+        } else if (typeof indexData.order === 'number') {
+          chapterCount = indexData.order;
+        } else if (Array.isArray(indexData.order) && indexData.order.length > 0) {
+          chapterCount = indexData.order[0] || 1;
         }
-        
+
         console.log(`${bookTitle}: ${chapterCount} chapters`);
-        
+
+        // Limit to reasonable maximum
+        chapterCount = Math.min(chapterCount, 150);
+
         if (chapterCount > 0) {
           setChapters(Array.from({ length: chapterCount }, (_, i) => i + 1));
         } else {
+          // If we can't determine chapter count, try to open chapter 1
           openText(`${bookTitle} 1`);
         }
       } catch (err) {
