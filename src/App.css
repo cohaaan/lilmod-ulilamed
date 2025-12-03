@@ -1,0 +1,327 @@
+/* App.css - Main application styles - Sefaria-inspired */
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #fafafa;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Header Styles - Sefaria-inspired clean header */
+.app-header {
+  background: #b8342a;
+  color: white;
+  padding: 15px 30px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.app-title {
+  margin: 0 0 2px 0;
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: -0.5px;
+}
+
+.app-subtitle {
+  margin: 0 0 12px 0;
+  font-size: 13px;
+  opacity: 0.85;
+  font-weight: 300;
+}
+
+.header-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-top: 12px;
+}
+
+.view-toggle {
+  display: flex;
+  background: rgba(255,255,255,0.15);
+  border-radius: 4px;
+  padding: 3px;
+  border: none;
+}
+
+.view-button {
+  padding: 6px 14px;
+  border: none;
+  background: transparent;
+  color: rgba(255,255,255,0.8);
+  font-size: 13px;
+  font-weight: 400;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.view-button:hover {
+  color: white;
+  background: rgba(255,255,255,0.1);
+}
+
+.view-button.active {
+  background: white;
+  color: #b8342a;
+}
+
+.language-toggle {
+  padding: 6px 14px;
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 4px;
+  background: transparent;
+  color: white;
+  font-size: 13px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.language-toggle:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.5);
+}
+
+/* Main Layout */
+.app-main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 20px;
+  padding: 20px;
+  max-width: 1600px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: fit-content;
+  position: sticky;
+  top: 100px;
+}
+
+.content {
+  min-height: 600px;
+}
+
+/* Footer Styles */
+.app-footer {
+  background: #2c3e50;
+  color: white;
+  padding: 20px 30px;
+  text-align: center;
+  border-top: 3px solid #34495e;
+}
+
+.app-footer p {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+}
+
+.app-footer a {
+  color: #3498db;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.app-footer a:hover {
+  color: #2980b9;
+  text-decoration: underline;
+}
+
+.text-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.text-info .text-title {
+  font-weight: 600;
+}
+
+.text-info .text-categories {
+  color: #bdc3c7;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .app-main {
+    grid-template-columns: 300px 1fr;
+    gap: 15px;
+    padding: 15px;
+  }
+  
+  .sidebar {
+    position: static;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-header {
+    padding: 15px 20px;
+  }
+  
+  .app-title {
+    font-size: 24px;
+  }
+  
+  .app-subtitle {
+    font-size: 14px;
+  }
+  
+  .app-main {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    padding: 10px;
+  }
+  
+  .sidebar {
+    order: 2;
+  }
+  
+  .content {
+    order: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-header {
+    padding: 12px 15px;
+    text-align: center;
+  }
+  
+  .app-title {
+    font-size: 20px;
+  }
+  
+  .app-subtitle {
+    font-size: 13px;
+    margin-bottom: 12px;
+  }
+  
+  .language-toggle {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+  
+  .app-main {
+    padding: 5px;
+  }
+  
+  .app-footer {
+    padding: 15px 20px;
+  }
+  
+  .text-info {
+    flex-direction: column;
+    gap: 5px;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .app {
+    background: white;
+  }
+  
+  .app-header {
+    background: white;
+    color: black;
+    box-shadow: none;
+    position: static;
+    border-bottom: 2px solid black;
+  }
+  
+  .language-controls {
+    display: none;
+  }
+  
+  .app-main {
+    display: block;
+    padding: 0;
+  }
+  
+  .sidebar {
+    display: none;
+  }
+  
+  .app-footer {
+    background: white;
+    color: black;
+    border-top: 2px solid black;
+  }
+  
+  .app-footer a {
+    color: black;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .language-toggle {
+    transition: none;
+  }
+  
+  .language-toggle:hover {
+    transform: none;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .app {
+    background: white;
+    color: black;
+  }
+  
+  .app-header {
+    background: black;
+    color: white;
+  }
+  
+  .language-toggle {
+    background: white;
+    color: black;
+    border: 2px solid white;
+  }
+  
+  .app-footer {
+    background: black;
+    color: white;
+    border-color: white;
+  }
+  
+  .app-footer a {
+    color: white;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .app {
+    background: #1a1a1a;
+    color: #e0e0e0;
+  }
+  
+  .app-header {
+    background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+  }
+  
+  .app-footer {
+    background: #2d3748;
+    border-top-color: #4a5568;
+  }
+}
